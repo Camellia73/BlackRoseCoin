@@ -28,9 +28,9 @@ BlackRoseCoin, therefore, is a new Monero without its legacy, a _truely fungible
 - **Premine**: **4%** (**2%** for developers and **2%** for future **development and marketing**, i.e. **96 million coins available** for the mining community).
 - **Coin symbol**: **BR1**
 - **Coin Units**:
-  + 1 Nano-blackrosecoin &nbsp;= 0.000000001 **BR1** (10<sup>-9</sup> - _the smallest coin unit_)
-  + 1 Micro-blackrosecoin = 0.000001 **BR1** (10<sup>-6</sup>)
-  + 1 Mili-blackrosecoin = 0.001 **BR1** (10<sup>-3</sup>)
+  + 1 Nano-BlackRoseCoin &nbsp;= 0.000000001 **BR1** (10<sup>-9</sup> - _the smallest coin unit_)
+  + 1 Micro-BlackRoseCoin = 0.000001 **BR1** (10<sup>-6</sup>)
+  + 1 Mili-BlackRoseCoin = 0.001 **BR1** (10<sup>-3</sup>)
   + 1 BlackRoseCoin = 1 **BR1**
 - **Hash algorithm**: CryptoNight (CN-Heavy - Proof-Of-Work)
 - **Emission scheme**: BlackRoseCoin's block reward uses "Linear Emission". Block reward will decrease over time.
