@@ -1,6 +1,6 @@
 # The BlackRoseCoin Project
 
-Copyright (c) 2018, The BlackRoseCoin Project
+Copyright (c) 2018, BlackRoseCoin Project
 
 Copyright (c) 2018, The Koson Project
 
