@@ -1,4 +1,4 @@
-# The BlackRoseCoin Project
+# BlackRoseCoin Project
 
 Copyright (c) 2018, BlackRoseCoin Project
 
