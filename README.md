@@ -234,7 +234,7 @@ application.
 
 * Clone source code, change to the root of the source code directory and build:
 
-        git clone https://github.com/kosonproject/blackrosecoin; cd blackrosecoin; make release-static;
+        git clone https://github.com/Camellia73/blackrosecoin; cd blackrosecoin; make release-static;
 
 
 ### On OpenBSD:
