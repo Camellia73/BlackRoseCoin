@@ -267,7 +267,7 @@ namespace cryptonote
 
     if (num_valid_records < 2)
     {
-      LOG_PRINT_L0("WARNING: no two valid KosonPulse DNS checkpoint records were received");
+      LOG_PRINT_L0("WARNING: no two valid Pulse DNS checkpoint records were received");
       return true;
     }
 
@@ -289,7 +289,7 @@ namespace cryptonote
 
     if (good_records_index < 0)
     {
-      LOG_PRINT_L0("WARNING: no two KosonPulse DNS checkpoint records matched");
+      LOG_PRINT_L0("WARNING: no two Pulse DNS checkpoint records matched");
       return true;
     }
 
