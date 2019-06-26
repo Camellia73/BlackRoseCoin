@@ -1,15 +1,9 @@
 # BlackRoseCoin Project
 
 Copyright (c) 2018-2019, BlackRoseCoin Project
-
-Copyright (c) 2018, The Koson Project
-
-Copyright (c) 2017, Sumokoin
-
-Copyright (c) 2014-2017, The Monero Project
-
-Portions Copyright (c) 2012-2013, The Cryptonote developers
-
+Copyright (c) 2018-2019, The Arqma Network
+Copyright (c) 2018, The CryoNote Developers
+Copyright (c) 2014-2018, The Monero Project
 ## Development Resources
 
 - Web: [https://www.blackrosenetwork.space](https://www.blackrosenetwork.space)
