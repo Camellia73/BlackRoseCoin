@@ -1,8 +1,11 @@
 # BlackRoseCoin Project
 
 Copyright (c) 2018-2019, BlackRoseCoin Project
+
 Copyright (c) 2018-2019, The Arqma Network
+
 Copyright (c) 2018, The CryoNote Developers
+
 Copyright (c) 2014-2018, The Monero Project
 ## Development Resources
 
