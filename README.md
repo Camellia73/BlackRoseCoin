@@ -2,11 +2,19 @@
 
 Copyright (c) 2018-2019, BlackRoseCoin Project
 
+Copyright (c) 2016-2019 The Karbowanec developers
+
 Copyright (c) 2018-2019, The Arqma Network
 
 Copyright (c) 2018, The CryoNote Developers
 
+Copyright (c) 2018-2019 The Koson Project
+
+Copyright (c) 2014-2016 XDN developers
+
 Copyright (c) 2014-2018, The Monero Project
+
+Copyright (c) 2011-2016 The Cryptonote developers
 ## Development Resources
 
 - Web: [https://www.blackrosenetwork.space](https://www.blackrosenetwork.space)
@@ -29,7 +37,7 @@ BlackRoseCoin, therefore, is a new Monero without its legacy, a _truely fungible
   + 1 Micro-BlackRoseCoin = 0.000001 **BR1** (10<sup>-6</sup>)
   + 1 Mili-BlackRoseCoin = 0.001 **BR1** (10<sup>-3</sup>)
   + 1 BlackRoseCoin = 1 **BR1**
-- **Hash algorithm**: CryptoNight (CN-Heavy - Proof-Of-Work)
+- **Hash algorithm**: CryptoNight (CN-Dark - Proof-Of-Work)
 - **Emission scheme**: BlackRoseCoin's block reward uses "Linear Emission". Block reward will decrease over time.
 
 ## About this Project
