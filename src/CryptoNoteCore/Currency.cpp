@@ -148,12 +148,27 @@ namespace CryptoNote {
 	}
 
 	bool Currency::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins,
-		uint64_t fee, uint64_t& reward, int64_t& emissionChange) const {
+		uint64_t fee, uint64_t& reward, int64_t& emissionChange, uint32_t height) const {
 		// assert(alreadyGeneratedCoins <= m_moneySupply);
 		assert(m_emissionSpeedFactor > 0 && m_emissionSpeedFactor <= 8 * sizeof(uint64_t));
 
-		// Tail emission
+		if(height==1) {
+			uint64_t baseReward = CryptoNote::parameters::GENESIS_BLOCK_REWARD;						
 
+			size_t blockGrantedFullRewardZone = blockGrantedFullRewardZoneByBlockVersion(blockMajorVersion);
+			medianSize = std::max(medianSize, blockGrantedFullRewardZone);			
+
+			uint64_t penalizedBaseReward = getPenalizedAmount(baseReward, medianSize, currentBlockSize);
+			uint64_t penalizedFee = blockMajorVersion >= BLOCK_MAJOR_VERSION_2 ? getPenalizedAmount(fee, medianSize, currentBlockSize) : fee;
+			if (cryptonoteCoinVersion() == 1) {
+				penalizedFee = getPenalizedAmount(fee, medianSize, currentBlockSize);
+			}
+
+			emissionChange = penalizedBaseReward - (fee - penalizedFee);
+			reward = penalizedBaseReward + penalizedFee;
+			}
+		else {
+		// Tail emission
 		uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 		if (alreadyGeneratedCoins + CryptoNote::parameters::TAIL_EMISSION_REWARD >= m_moneySupply || baseReward < CryptoNote::parameters::TAIL_EMISSION_REWARD)
 		{
@@ -181,6 +196,8 @@ namespace CryptoNote {
 
 		emissionChange = penalizedBaseReward - (fee - penalizedFee);
 		reward = penalizedBaseReward + penalizedFee;
+			
+		}		
 
 		return true;
 	}
@@ -213,7 +230,7 @@ namespace CryptoNote {
 
 		uint64_t blockReward;
 		int64_t emissionChange;
-		if (!getBlockReward(blockMajorVersion, medianSize, currentBlockSize, alreadyGeneratedCoins, fee, blockReward, emissionChange)) {
+		if (!getBlockReward(blockMajorVersion, medianSize, currentBlockSize, alreadyGeneratedCoins, fee, blockReward, emissionChange, height)) {
 			logger(INFO) << "Block is too big";
 			return false;
 		}

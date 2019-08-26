@@ -74,13 +74,7 @@ library archives (`.a`).
 | pkg-config     | any           | NO       | `pkg-config`       | `base-devel`   | NO       |                |
 | Boost          | 1.58          | NO       | `libboost-all-dev` | `boost`        | NO       |                |
 | OpenSSL      	 | basically any | NO       | `libssl-dev`       | `openssl`      | NO       | sha256 sum     |
-| BerkeleyDB     | 4.8           | NO       | `libdb{,++}-dev`   | `db`           | NO       |                |
-| libevent       | 2.0           | NO       | `libevent-dev`     | `libevent`     | NO       |                |
-| libunbound     | 1.4.16        | YES      | `libunbound-dev`   | `unbound`      | NO       |                |
 | libminiupnpc   | 2.0           | YES      | `libminiupnpc-dev` | `miniupnpc`    | YES      | NAT punching   |
-| libunwind      | any           | NO       | `libunwind8-dev`   | `libunwind`    | YES      | stack traces   |
-| ldns           | 1.6.17        | NO       | `libldns-dev`      | `ldns`         | YES      | ?              |
-| expat          | 1.1           | NO       | `libexpat1-dev`    | `expat`        | YES      | ?              |
 | GTest          | 1.5           | YES      | `libgtest-dev`^    | `gtest`        | YES      | test suite     |
 | Doxygen        | any           | NO       | `doxygen`          | `doxygen`      | YES      | documentation  |
 | Graphviz       | any           | NO       | `graphviz`         | `graphviz`     | YES      | documentation  |
@@ -223,11 +217,11 @@ application.
 
 * If you are on a 64-bit system, run:
 
-        make release-static-win64
+        make release-static
 
 * If you are on a 32-bit system, run:
 
-        make release-static-win32
+        make release-static
 
 * The resulting executables can be found in `build/mingw64/release/bin` or `build/mingw32/release/bin` accordingly.
 
@@ -256,18 +250,6 @@ https://github.com/bitcoin/bitcoin/blob/master/doc/build-openbsd.md
 You will have to add the serialization, date_time, and regex modules to Boost when building as they are needed by BlackRoseCoin.
 
 To build: `env CC=egcc CXX=eg++ CPP=ecpp DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/path/to/the/boost/you/built make release-static-64`
-
-### Building Portable Statically Linked Binaries
-
-By default, in either dynamically or statically linked builds, binaries target the specific host processor on which the build happens and are not portable to other processors. Portable binaries can be built using the following targets:
-
-* ```make release-static-64``` builds binaries on Linux on x86_64 portable across POSIX systems on x86_64 processors
-* ```make release-static-32``` builds binaries on Linux on x86_64 or i686 portable across POSIX systems on i686 processors
-* ```make release-static-armv8``` builds binaries on Linux portable across POSIX systems on armv8 processors
-* ```make release-static-armv7``` builds binaries on Linux portable across POSIX systems on armv7 processors
-* ```make release-static-armv6``` builds binaries on Linux portable across POSIX systems on armv6 processors
-* ```make release-static-win64``` builds binaries on 64-bit Windows portable across 64-bit Windows systems
-* ```make release-static-win32``` builds binaries on 64-bit or 32-bit Windows portable across 32-bit Windows systems
 
 ## Running blackrosecoind
 
@@ -330,17 +312,3 @@ Note: rlwrap will save things like your seed and private keys, if you supply the
 # Debugging
 
 This section contains general instructions for debugging failed installs or problems encountered with BlackRoseCoin. First ensure you are running the latest version built from the github repo.
-
-## LMDB
-
-Instructions for debugging suspected blockchain corruption as per @HYC
-
-There is an `mdb_stat` command in the LMDB source that can print statistics about the database but it's not routinely built. This can be built with the following command:
-
-`cd ~/blackrosecoin/external/db_drivers/liblmdb && make`
-
-The output of `mdb_stat -ea <path to blockchain dir>` will indicate inconsistencies in the blocks, block_heights and block_info table.
-
-The output of `mdb_dump -s blocks <path to blockchain dir>` and `mdb_dump -s block_info <path to blockchain dir>` is useful for indicating whether blocks and block_info contain the same keys.
-
-These records are dumped as hex data, where the first line is the key and the second line is the data.
