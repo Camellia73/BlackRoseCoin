@@ -1010,7 +1010,8 @@ bool core::getAlreadyGeneratedCoins(const Crypto::Hash& hash, uint64_t& generate
   return m_blockchain.getAlreadyGeneratedCoins(hash, generatedCoins);
 }
 
-bool core::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee, uint64_t& reward, int64_t& emissionChange, uint32_t& height) {
+bool core::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size_t currentBlockSize, uint64_t alreadyGeneratedCoins, uint64_t fee,
+                          uint64_t& reward, int64_t& emissionChange, uint32_t& height) {
   return m_currency.getBlockReward(blockMajorVersion, medianSize, currentBlockSize, alreadyGeneratedCoins, fee, reward, emissionChange, height);
 }
 
@@ -1279,6 +1280,10 @@ bool core::is_key_image_spent(const Crypto::KeyImage& key_im) {
   return m_blockchain.have_tx_keyimg_as_spent(key_im);
 }
 
+bool core::is_key_image_spent(const Crypto::KeyImage& key_im, uint32_t height) {
+  return m_blockchain.checkIfSpent(key_im, height);
+}
+
 bool core::addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) {
   return m_blockchain.addMessageQueue(messageQueue);
 }
@@ -1288,6 +1293,7 @@ bool core::removeMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) {
 }
 
 void core::rollbackBlockchain(const uint32_t height) {
+  logger(INFO, BRIGHT_YELLOW) << "Rewinding blockchain to height: " << height;
   m_blockchain.rollbackBlockchainTo(height);
 }
 

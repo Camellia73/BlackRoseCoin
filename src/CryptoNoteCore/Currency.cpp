@@ -169,6 +169,7 @@ namespace CryptoNote {
 			}
 		else {
 		// Tail emission
+
 		uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 		if (alreadyGeneratedCoins + CryptoNote::parameters::TAIL_EMISSION_REWARD >= m_moneySupply || baseReward < CryptoNote::parameters::TAIL_EMISSION_REWARD)
 		{
@@ -197,7 +198,7 @@ namespace CryptoNote {
 		emissionChange = penalizedBaseReward - (fee - penalizedFee);
 		reward = penalizedBaseReward + penalizedFee;
 			
-		}		
+		}
 
 		return true;
 	}
@@ -586,8 +587,8 @@ namespace CryptoNote {
 		uint64_t nextDiffZ = low / timeSpan;
 
 		// minimum limit
-		if (!isTestnet() && nextDiffZ < 100000) {
-			nextDiffZ = 100000;
+		if (!isTestnet() && nextDiffZ < 100) {
+			nextDiffZ = 100;
 		}
 
 		return nextDiffZ;
@@ -649,8 +650,8 @@ namespace CryptoNote {
 		next_difficulty = static_cast<uint64_t>(nextDifficulty);
 		
 		// minimum limit
-		if (!isTestnet() && next_difficulty < 100000) {
-			next_difficulty = 100000;
+		if (!isTestnet() && next_difficulty < 100) {
+			next_difficulty = 100;
 		}
 
 		return next_difficulty;
@@ -712,8 +713,8 @@ namespace CryptoNote {
 		}
 
 		// minimum limit
-		if (!isTestnet() && next_D < 100000) {
-			next_D = 100000;
+		if (!isTestnet() && next_D < 100) {
+			next_D = 100;
 		}
 
 		return next_D;

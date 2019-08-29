@@ -651,9 +651,11 @@ struct COMMAND_RPC_GET_BLOCK_HEADER_BY_HEIGHT {
 struct F_COMMAND_RPC_GET_BLOCKS_LIST {
   struct request {
     uint32_t height;
+    uint32_t count = 10;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(height)
+      KV_MEMBER(count)
     }
   };
 
@@ -1147,11 +1149,13 @@ struct K_COMMAND_RPC_CHECK_RESERVE_PROOF {
 		std::string address;
 		std::string message;
 		std::string signature;
+    uint32_t height = 0;
 		
 		void serialize(ISerializer &s) {
 			KV_MEMBER(address)
 			KV_MEMBER(message)
 			KV_MEMBER(signature)
+      KV_MEMBER(height)
 		}
 	};
 

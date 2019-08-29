@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
     }
 
 	std::cout <<
-"\n             BlackRoseCoin v 1.4.8 Fallen             \n" << ENDL;
+"\n             BlackRoseCoin v 2.0.1 Lover             \n" << ENDL;
 
     logger(INFO) << "Module folder: " << argv[0];
 
@@ -326,7 +326,6 @@ int main(int argc, char* argv[])
           std::cout << "wrong block index parameter" << ENDL;
           return false;
         }
-        logger(INFO, BRIGHT_YELLOW) << "Rollback blockchain to height " << _index;
         ccore.rollbackBlockchain(_index);
       }
     }
