@@ -27,12 +27,12 @@
 namespace CryptoNote {
 namespace parameters {
 
-const uint64_t DIFFICULTY_TARGET                             = 240; // seconds
+const uint64_t DIFFICULTY_TARGET                             = 120; // seconds
 const uint64_t EXPECTED_NUMBER_OF_BLOCKS_PER_DAY             = 24 * 60 * 60 / DIFFICULTY_TARGET;
 const uint64_t CRYPTONOTE_MAX_BLOCK_NUMBER                   = 500000000;
 const size_t   CRYPTONOTE_MAX_BLOCK_BLOB_SIZE                = 500000000;
 const size_t   CRYPTONOTE_MAX_TX_SIZE                        = 1000000000;
-const uint64_t CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX       = 0x29d0; // addresses start with "K"
+const uint64_t CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX       = 0x29d0; // addresses start with "br"
 const size_t   CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW          = 10;
 const size_t   CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW_V1       = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;
 const size_t   CRYPTONOTE_TX_SPENDABLE_AGE                   = 6;
@@ -42,10 +42,10 @@ const size_t   BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW             = 60;
 const size_t   BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW_V1          = 11;
 
 // MONEY_SUPPLY - total number coins to be generated
-const uint64_t MONEY_SUPPLY                                  = UINT64_C(10000000000000000000);
-const uint64_t COIN                                          = UINT64_C(1000000000000);
-const uint64_t TAIL_EMISSION_REWARD                          = UINT64_C(1000000000000);
-const uint64_t GENESIS_BLOCK_REWARD                          = UINT64_C(80000000000000000);
+const uint64_t MONEY_SUPPLY                                  = UINT64_C(1000000000000000000);
+const uint64_t COIN                                          = UINT64_C(10000000000);
+const uint64_t TAIL_EMISSION_REWARD                          = UINT64_C(10000000000);
+const uint64_t GENESIS_BLOCK_REWARD                          = UINT64_C(500000000000000000);
 const size_t CRYPTONOTE_COIN_VERSION                         = 1;
 const unsigned EMISSION_SPEED_FACTOR                         = 18;
 static_assert(EMISSION_SPEED_FACTOR <= 8 * sizeof(uint64_t), "Bad EMISSION_SPEED_FACTOR");
@@ -56,15 +56,15 @@ const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2  = 1000000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1  = 100000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE;
 const size_t   CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE        = 600;
-const size_t   CRYPTONOTE_DISPLAY_DECIMAL_POINT              = 12;
+const size_t   CRYPTONOTE_DISPLAY_DECIMAL_POINT              = 10;
 
-const uint64_t MINIMUM_FEE_V1                                = UINT64_C(100000000);
-const uint64_t MINIMUM_FEE_V2                                = UINT64_C(100000000000);
+const uint64_t MINIMUM_FEE_V1                                = UINT64_C(1000000);
+const uint64_t MINIMUM_FEE_V2                                = UINT64_C(1000000000);
 const uint32_t MINIMUM_FEE_V2_HEIGHT                         = 140;
 const uint64_t MINIMUM_FEE                                   = MINIMUM_FEE_V2;
-const uint64_t MAXIMUM_FEE                                   = UINT64_C(100000000000);
+const uint64_t MAXIMUM_FEE                                   = UINT64_C(1000000000);
 
-const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(100000000);
+const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(1000000);
 const uint64_t MIN_TX_MIXIN_SIZE                             = 2;
 const uint64_t MAX_TX_MIXIN_SIZE_V1                          = 50;
 const uint64_t MAX_TX_MIXIN_SIZE_V2                          = 20;
@@ -120,7 +120,7 @@ const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json"
 } // parameters
 
 const char     CRYPTONOTE_NAME[]                             = "blackrose";
-const char     GENESIS_COINBASE_TX_HEX[]                     = "010a01ff0001fac484c69cd608029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd0880712101f904925cc23f86f9f3565188862275dc556a9bdfb6aec22c5aca7f0177c45ba8";
+const char     GENESIS_COINBASE_TX_HEX[]                     = "010a01ff0001d9d3b3ed826f029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd08807121014668a90a250f177d018c28e44a86b78cb3f38bf11a7e1ee8813bd8749bab1b6b";
 const char     DNS_CHECKPOINTS_HOST[]                        = "blackrosenetwork.space";
 
 const uint8_t  CURRENT_TRANSACTION_VERSION                   =  1;
@@ -157,14 +157,14 @@ const uint32_t P2P_IP_BLOCKTIME                              = (60 * 60 * 24);//
 const uint32_t P2P_IP_FAILS_BEFORE_BLOCK                     = 10;
 const uint32_t P2P_IDLE_CONNECTION_KILL_INTERVAL             = (5 * 60);      //5 minutes
 
-const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "8f80f9a5a434a9f1510d13336228debfee9c918ce505efe225d8c94d045fa115";
+const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 const char* const SEED_NODES[] = { 
   "192.95.20.54:16301",
   "144.217.29.36:16301",
   "144.217.29.34:16301",
   "144.217.30.38:16301",
-  "173.208.176.252:16301"
+  "173.212.213.63:16301"
 };
 
 } // CryptoNote
