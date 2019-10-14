@@ -337,7 +337,7 @@ std::error_code InProcessNode::doRelayTransaction(const CryptoNote::Transaction&
     CryptoNote::BinaryArray transactionBinaryArray = toBinaryArray(transaction);
     CryptoNote::tx_verification_context tvc = boost::value_initialized<CryptoNote::tx_verification_context>();
 
-    if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false)) {
+    if (!core.handle_incoming_tx(transactionBinaryArray, tvc, false, false)) {
       return make_error_code(CryptoNote::error::REQUEST_ERROR);
     }
 
@@ -428,15 +428,6 @@ uint64_t InProcessNode::getLastLocalBlockTimestamp() const {
 uint64_t InProcessNode::getMinimalFee() const {
   std::unique_lock<std::mutex> lock(mutex);
   return core.getMinimalFee();
-}
-
-void InProcessNode::getFeeAddress() {
-  // Do nothing
-  return;
-}
-
-std::string InProcessNode::feeAddress() const { 
-  return std::string();
 }
 
 BlockHeaderInfo InProcessNode::getLastLocalBlockHeaderInfo() const {
@@ -661,23 +652,6 @@ void InProcessNode::getBlocks(const std::vector<uint32_t>& blockHeights, std::ve
       callback
     )
   );
-}
-
-void InProcessNode::getBlock(const uint32_t blockHeight, BlockDetails &block, const Callback& callback) {
-  std::unique_lock<std::mutex> lock(mutex);
-  if (state != INITIALIZED) {
-    lock.unlock();
-    callback(make_error_code(CryptoNote::error::NOT_INITIALIZED));
-    return;
-  }
-
-  std::vector<uint32_t> blockHeights;
-  std::vector<std::vector<BlockDetails>> blocks;
-  blockHeights.push_back(blockHeight);
- 
-  getBlocksAsync(blockHeights, blocks, callback);
-
-  block = blocks[0][0];
 }
 
 void InProcessNode::getBlocksAsync(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) {

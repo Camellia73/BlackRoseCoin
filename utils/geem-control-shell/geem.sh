@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2018, Karbo developers (Aiwe, Lastick)
+# Copyright (c) 2016-2018, Geem developers (Aiwe, Lastick)
 # English correction by Grabbers
 #
 # All rights reserved
@@ -30,23 +30,23 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-DATA_DIR="/var/karbo"
-LOG_DIR="/var/log/karbo"
-RUN_DIR="/var/run/karbo"
+DATA_DIR="/var/geem"
+LOG_DIR="/var/log/geem"
+RUN_DIR="/var/run/geem"
 TMP_DIR="/tmp"
 HTDOCS_DIR="/tmp"
 
-KRBD="/usr/sbin/karbowanecd"
+GEEMD="/usr/sbin/geemd"
 
-KRBD_P2P_IP="0.0.0.0"
-KRBD_P2P_PORT="32347"
-KRBD_RPC_IP="127.0.0.1"
-KRBD_RPC_PORT="32348"
-KRBD_LOG_LEVEL="2"
-KRBD_FEE_ADDRESS="Ke5tURH8PotZfvk3B444EtEu29PwtjTND4SBmw1NL7gd9gZ6y78F9cz4ZKepay2o2uH4HXu4poTUeJ4FyQMiaTukLKgrpLS"
-KRBD_VIEW_KEY=""
+GEEMD_P2P_IP="0.0.0.0"
+GEEMD_P2P_PORT="2045"
+GEEMD_RPC_IP="127.0.0.1"
+GEEMD_RPC_PORT="2046"
+GEEMD_LOG_LEVEL="2"
+GEEMD_FEE_ADDRESS="Ke5tURH8PotZfvk3B444EtEu29PwtjTND4SBmw1NL7gd9gZ6y78F9cz4ZKepay2o2uH4HXu4poTUeJ4FyQMiaTukLKgrpLS"
+GEEMD_VIEW_KEY=""
 
-KRBS_CONTROL="/usr/lib/karbo/krbs.sh"
+GEEMS_CONTROL="/usr/lib/geem/geems.sh"
 
 SIGTERM_TIMEOUT=240
 SIGKILL_TIMEOUT=120
@@ -108,7 +108,7 @@ else
 fi
 
 # Check all files
-if [ ! -f $KRBD ]; then
+if [ ! -f $GEEMD ]; then
   echo "Error: DEAMON bin file not found!"
   exit 1
 fi
@@ -118,8 +118,8 @@ if [ ! -f $ZIP ]; then
   exit 1
 fi
 
-if [ ! -f $KRBS_CONTROL ]; then
-  echo "Error: KRBS start script file not found!"
+if [ ! -f $GEEMS_CONTROL ]; then
+  echo "Error: GEEMS start script file not found!"
   exit 1
 fi
 
@@ -127,69 +127,69 @@ fi
 
 # Function logger
 logger(){
-  if [ ! -f $LOG_DIR/krbd_control.log ]; then
-    touch $LOG_DIR/krbd_control.log
+  if [ ! -f $LOG_DIR/geemd_control.log ]; then
+    touch $LOG_DIR/geemd_control.log
   fi
   mess=[$(date '+%Y-%m-%d %H:%M:%S')]" "$1
-  echo $mess >> $LOG_DIR/krbd_control.log
+  echo $mess >> $LOG_DIR/geemd_control.log
   echo $mess
 }
 
 # Funstion locker
 locker(){
   if [ "$1" = "check" ]; then
-    if [ -f $RUN_DIR/krbd_control.lock ]; then
+    if [ -f $RUN_DIR/geemd_control.lock ]; then
       logger "LOCKER: previous task is not completed; exiting..."
       exit 0
     fi
   fi
   if [ "$1" = "init" ]; then
-    touch $RUN_DIR/krbd_control.lock
+    touch $RUN_DIR/geemd_control.lock
   fi
     if [ "$1" = "end" ]; then
-    rm -f $RUN_DIR/krbd_control.lock
+    rm -f $RUN_DIR/geemd_control.lock
   fi
 }
 
 # Function init service
 service_init(){
-  $KRBD --data-dir $DATA_DIR \
-        --log-file $LOG_DIR/krbd.log \
-        --log-level $KRBD_LOG_LEVEL \
+  $GEEMD --data-dir $DATA_DIR \
+        --log-file $LOG_DIR/geemd.log \
+        --log-level $GEEMD_LOG_LEVEL \
         --restricted-rpc \
         --no-console \
         --enable-cors "*" \
-        --p2p-bind-ip $KRBD_P2P_IP \
-        --p2p-bind-port $KRBD_P2P_PORT \
-        --rpc-bind-ip $KRBD_RPC_IP \
-        --rpc-bind-port $KRBD_RPC_PORT \
-        --fee-address $KRBD_FEE_ADDRESS \
-        --view-key $KRBD_VIEW_KEY > /dev/null & echo $! > $RUN_DIR/KRBD.pid
+        --p2p-bind-ip $GEEMD_P2P_IP \
+        --p2p-bind-port $GEEMD_P2P_PORT \
+        --rpc-bind-ip $GEEMD_RPC_IP \
+        --rpc-bind-port $GEEMD_RPC_PORT \
+        --fee-address $GEEMD_FEE_ADDRESS \
+        --view-key $GEEMD_VIEW_KEY > /dev/null & echo $! > $RUN_DIR/GEEMD.pid
 }
 
 # Function start service
 service_start(){
-  if [ ! -f $RUN_DIR/KRBD.pid ]; then
+  if [ ! -f $RUN_DIR/GEEMD.pid ]; then
     logger "START: trying to start service..."
     service_init
     sleep 5
-    if [ -f $RUN_DIR/KRBD.pid ]; then
-      pid=$(sed 's/[^0-9]*//g' $RUN_DIR/KRBD.pid)
+    if [ -f $RUN_DIR/GEEMD.pid ]; then
+      pid=$(sed 's/[^0-9]*//g' $RUN_DIR/GEEMD.pid)
       if [ -f /proc/$pid/stat ]; then
         logger "START: success!"
       fi
     fi
   else
-    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/KRBD.pid)
+    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/GEEMD.pid)
     if [ -f /proc/$pid/stat ]; then
       logger "START: process is already running"
     else
       logger "START: abnormal termination detected; starting..."
-      rm -f $RUN_DIR/KRBD.pid
+      rm -f $RUN_DIR/GEEMD.pid
       service_init
       sleep 5
-      if [ -f $RUN_DIR/KRBD.pid ]; then
-        pid=$(sed 's/[^0-9]*//g' $RUN_DIR/KRBD.pid)
+      if [ -f $RUN_DIR/GEEMD.pid ]; then
+        pid=$(sed 's/[^0-9]*//g' $RUN_DIR/GEEMD.pid)
         if [ -f /proc/$pid/stat ]; then
           logger "START: success!"
         fi
@@ -200,27 +200,27 @@ service_start(){
 
 # Function stop service
 service_stop(){
-  if [ -f $RUN_DIR/KRBD.pid ]; then
+  if [ -f $RUN_DIR/GEEMD.pid ]; then
     logger "STOP: attempting to stop the service..."
-    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/KRBD.pid)
+    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/GEEMD.pid)
     if [ -f /proc/$pid/stat ]; then
       kill $pid
       sleep 5
       for i in $(seq 1 $SIGTERM_TIMEOUT); do
         if [ ! -f /proc/$pid/stat ]; then
-          rm -f $RUN_DIR/KRBD.pid
+          rm -f $RUN_DIR/GEEMD.pid
           logger "STOP: success!"
           break
         fi
         sleep 1
       done
-      if [ -f $RUN_DIR/KRBD.pid ]; then
+      if [ -f $RUN_DIR/GEEMD.pid ]; then
         logger "STOP: attempt failed, trying again..."
         kill -9 $pid
         sleep 5
         for i in $(seq 1 $SIGKILL_TIMEOUT); do
           if [ ! -f /proc/$pid/stat ]; then
-            rm -f $RUN_DIR/KRBD.pid
+            rm -f $RUN_DIR/GEEMD.pid
             logger "STOP: service has been killed (SIGKILL) due to ERROR!"
             break
           fi
@@ -229,7 +229,7 @@ service_stop(){
       fi
     else
       logger "STOP: PID file found, but service not detected; possible error..."
-      rm -f $RUN_DIR/KRBD.pid
+      rm -f $RUN_DIR/GEEMD.pid
     fi
   else
     logger "STOP: no service found!"
@@ -270,8 +270,8 @@ archiver(){
 # Function checker
 checker(){
   logger "CHECKER: began"
-  if [ -f $RUN_DIR/KRBD.pid ]; then
-    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/KRBD.pid)
+  if [ -f $RUN_DIR/GEEMD.pid ]; then
+    pid=$(sed 's/[^0-9]*//g' $RUN_DIR/GEEMD.pid)
     if [ -f /proc/$pid/stat ]; then
       logger "CHECKER: all fine!"
     else
@@ -285,10 +285,10 @@ checker(){
 }
 
 # Fucntion check simplewallet is was started
-IS_KRBS="stop"
+IS_GEEMS="stop"
 is_run_simplewallet(){
-  if [ -f $RUN_DIR/KRBS.pid ]; then
-    IS_KRBS="run"
+  if [ -f $RUN_DIR/GEEMS.pid ]; then
+    IS_GEEMS="run"
   fi
 }
 
@@ -302,9 +302,9 @@ do_start(){
 do_stop(){
   is_run_simplewallet
   logger "DO STOP: procedure initializing..."
-  if [ "$IS_KRBS" = "run" ]; then
+  if [ "$IS_GEEMS" = "run" ]; then
     logger "DO STOP: stopping dependant service..."
-    $KRBS_CONTROL --stop > /dev/null
+    $GEEMS_CONTROL --stop > /dev/null
   fi
   service_stop
   logger "DO STOP: ok"
@@ -313,17 +313,17 @@ do_stop(){
 do_restart(){
   is_run_simplewallet
   logger "DO RESTART: procedure initializing..."
-  if [ "$IS_KRBS" = "run" ]; then
+  if [ "$IS_GEEMS" = "run" ]; then
     logger "DO RESTART: Simplewallet was started and will be stopped. Stopping Simplewallet service..."
-    $KRBS_CONTROL --stop > /dev/null
+    $GEEMS_CONTROL --stop > /dev/null
   fi
   service_stop
   service_start
-  if [ "$IS_KRBS" = "run" ]; then
+  if [ "$IS_GEEMS" = "run" ]; then
     logger "DO RESTART: Simplewallet will be started again. Waiting for the node to be ready..."
     sleep 15
     logger "DO RESTART: starting Simplewallet service..."
-    $KRBS_CONTROL --start > /dev/null
+    $GEEMS_CONTROL --start > /dev/null
   fi
   logger "DO RESTART: ok"
 }

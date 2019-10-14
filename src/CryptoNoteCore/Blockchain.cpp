@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers, The Monero developers
 // Copyright (c) 2018, Ryo Currency Project
-// Copyright (c) 2016-2018, The Karbo developers
+// Copyright (c) 2018, The Karbo Developers
+// Copyright (c) 2018-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -333,7 +334,7 @@ m_checkpoints(logger),
 m_paymentIdIndex(blockchainIndexesEnabled),
 m_timestampIndex(blockchainIndexesEnabled),
 m_generatedTransactionsIndex(blockchainIndexesEnabled),
-m_orphanBlocksIndex(blockchainIndexesEnabled),
+m_orthanBlocksIndex(blockchainIndexesEnabled),
 m_blockchainIndexesEnabled(blockchainIndexesEnabled) {
 
   m_outputs.set_deleted_key(0);
@@ -521,7 +522,7 @@ bool Blockchain::init(const std::string& config_folder, bool load_existing) {
 
   uint64_t timestamp_diff = time(NULL) - m_blocks.back().bl.timestamp;
   if (!m_blocks.back().bl.timestamp) {
-    timestamp_diff = time(NULL) - 1341378000;
+    timestamp_diff = time(NULL) - 1567486800;
   }
 
   logger(INFO, BRIGHT_GREEN)
@@ -613,7 +614,7 @@ bool Blockchain::resetAndSetGenesisBlock(const Block& b) {
   m_paymentIdIndex.clear();
   m_timestampIndex.clear();
   m_generatedTransactionsIndex.clear();
-  m_orphanBlocksIndex.clear();
+  m_orthanBlocksIndex.clear();
 
   block_verification_context bvc = boost::value_initialized<block_verification_context>();
   addNewBlock(b, bvc);
@@ -713,7 +714,7 @@ difficulty_type Blockchain::getDifficultyForNextBlock() {
   std::vector<difficulty_type> cumulative_difficulties;
   uint8_t BlockMajorVersion = getBlockMajorVersionForHeight(static_cast<uint32_t>(m_blocks.size()));
   size_t offset;
-  offset = m_blocks.size() - std::min<size_t>(m_blocks.size(), static_cast<size_t>(m_currency.difficultyBlocksCountByBlockVersion(BlockMajorVersion)));
+  offset = m_blocks.size() - std::min(m_blocks.size(), static_cast<uint64_t>(m_currency.difficultyBlocksCountByBlockVersion(BlockMajorVersion)));
 
   if (offset == 0) {
     ++offset;
@@ -725,23 +726,15 @@ difficulty_type Blockchain::getDifficultyForNextBlock() {
   return m_currency.nextDifficulty(static_cast<uint32_t>(m_blocks.size()), BlockMajorVersion, timestamps, cumulative_difficulties);
 }
 
-difficulty_type Blockchain::getAvgDifficultyForHeight(uint32_t height, uint32_t window) {
+difficulty_type Blockchain::getAvgDifficultyForHeight(uint32_t height, size_t window) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  height = std::min<uint32_t>(height, m_blocks.size() - 1);
-  if (height <= 1)
-    return 1;
-
-  if (window == height) {
-    return m_blocks[height].cumulative_difficulty / height;
-  }
-
   size_t offset;
-  offset = height - std::min<uint32_t>(height, std::min<uint32_t>(static_cast<uint32_t>(m_blocks.size() - 1), window));
+  offset = height - std::min(height, std::min<uint32_t>(m_blocks.size(), window));
   if (offset == 0) {
     ++offset;
   }
   difficulty_type cumulDiffForPeriod = m_blocks[height].cumulative_difficulty - m_blocks[offset].cumulative_difficulty;
-  return cumulDiffForPeriod / std::min<uint32_t>(static_cast<uint32_t>(m_blocks.size() - 1), window);
+  return cumulDiffForPeriod / std::min<uint32_t>(m_blocks.size(), window);
 }
 
 uint64_t Blockchain::getBlockTimestamp(uint32_t height) {
@@ -756,13 +749,13 @@ uint64_t Blockchain::getMinimalFee(uint32_t height) {
 	    return 0;
 	}
 
-	if (height > static_cast<uint32_t>(m_blocks.size()) - 1) {
-		height = static_cast<uint32_t>(m_blocks.size()) - 1;
+	if (height > m_blocks.size() - 1) {
+		height = m_blocks.size() - 1;
 	}
 	if (height < 3) {
 		height = 3;
 	}
-  uint32_t window = std::min(height, std::min<uint32_t>(static_cast<uint32_t>(m_blocks.size()), static_cast<uint32_t>(m_currency.expectedNumberOfBlocksPerDay())));
+	size_t window = std::min(height, std::min<uint32_t>(m_blocks.size(), m_currency.expectedNumberOfBlocksPerDay()));
 	if (window == 0) {
 		++window;
 	}
@@ -789,7 +782,6 @@ uint64_t Blockchain::getMinimalFee(uint32_t height) {
 		rewards.push_back(get_outs_money_amount(m_blocks[offset].bl.baseTransaction));
 	}
 	uint64_t avgRewardCurrent = std::accumulate(rewards.begin(), rewards.end(), 0ULL) / rewards.size();
-	rewards.clear();
 	rewards.shrink_to_fit();
 
 	// historical reference moving average reward
@@ -967,13 +959,13 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
       rollback_blockchain_switching(disconnected_chain, split_height);
       //add_block_as_invalid(ch_ent->second, get_block_hash(ch_ent->second.bl));
       logger(INFO, BRIGHT_WHITE) << "The block was inserted as invalid while connecting new alternative chain,  block_id: " << get_block_hash(ch_ent->second.bl);
-      m_orphanBlocksIndex.remove(ch_ent->second.bl);
+      m_orthanBlocksIndex.remove(ch_ent->second.bl);
       m_alternative_chains.erase(ch_ent);
 
       for (auto alt_ch_to_orph_iter = ++alt_ch_iter; alt_ch_to_orph_iter != alt_chain.end(); alt_ch_to_orph_iter++) {
         //block_verification_context bvc = boost::value_initialized<block_verification_context>();
         //add_block_as_invalid((*alt_ch_iter)->second, (*alt_ch_iter)->first);
-        m_orphanBlocksIndex.remove((*alt_ch_to_orph_iter)->second.bl);
+        m_orthanBlocksIndex.remove((*alt_ch_to_orph_iter)->second.bl);
         m_alternative_chains.erase(*alt_ch_to_orph_iter);
       }
 
@@ -1000,7 +992,7 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
   //removing all_chain entries from alternative chain
   for (auto ch_ent : alt_chain) {
     blocksFromCommonRoot.push_back(get_block_hash(ch_ent->second.bl));
-    m_orphanBlocksIndex.remove(ch_ent->second.bl);
+    m_orthanBlocksIndex.remove(ch_ent->second.bl);
     m_alternative_chains.erase(ch_ent);
   }
 
@@ -1091,11 +1083,11 @@ bool Blockchain::prevalidate_miner_transaction(const Block& b, uint32_t height) 
     return false;
   }
 
-  if (!(b.baseTransaction.unlockTime == height + (height < CryptoNote::parameters::UPGRADE_HEIGHT_V5 ? m_currency.minedMoneyUnlockWindow() : m_currency.minedMoneyUnlockWindow_v1()))) {
+  if (!(b.baseTransaction.unlockTime == height + m_currency.minedMoneyUnlockWindow())) {
     logger(ERROR, BRIGHT_RED)
       << "coinbase transaction transaction have wrong unlock time="
       << b.baseTransaction.unlockTime << ", expected "
-      << height + (height < CryptoNote::parameters::UPGRADE_HEIGHT_V5 ? m_currency.minedMoneyUnlockWindow() : m_currency.minedMoneyUnlockWindow_v1());
+      << height + m_currency.minedMoneyUnlockWindow();
     return false;
   }
 
@@ -1326,7 +1318,7 @@ bool Blockchain::handle_alternative_block(const Block& b, const Crypto::Hash& id
     auto i_res = m_alternative_chains.insert(blocks_ext_by_hash::value_type(id, bei));
     if (!(i_res.second)) { logger(ERROR, BRIGHT_RED) << "insertion of new alternative block returned as it already exist"; return false; }
 
-    m_orphanBlocksIndex.add(bei.bl);
+    m_orthanBlocksIndex.add(bei.bl);
 
     alt_chain.push_back(i_res.first);
 
@@ -1478,7 +1470,7 @@ size_t Blockchain::find_end_of_allowed_index(const std::vector<std::pair<Transac
   size_t i = amount_outs.size();
   do {
     --i;
-    if (amount_outs[i].first.block + (amount_outs[i].first.block < CryptoNote::parameters::UPGRADE_HEIGHT_V5 ? m_currency.minedMoneyUnlockWindow() : m_currency.minedMoneyUnlockWindow_v1()) <= getCurrentBlockchainHeight()) {
+    if (amount_outs[i].first.block + m_currency.minedMoneyUnlockWindow() <= getCurrentBlockchainHeight()) {
       return i + 1;
     }
   } while (i != 0);
@@ -1767,10 +1759,8 @@ bool Blockchain::is_tx_spendtime_unlocked(uint64_t unlock_time) {
       return false;
   } else {
     //interpret as time
-
-    // compare with last block timestamp + delta seconds
-    const uint64_t lastBlockTimestamp = getBlockTimestamp(getCurrentBlockchainHeight() - 1);
-    if (lastBlockTimestamp + m_currency.lockedTxAllowedDeltaSeconds() >= unlock_time)
+    uint64_t current_time = static_cast<uint64_t>(time(NULL));
+    if (current_time + m_currency.lockedTxAllowedDeltaSeconds() >= unlock_time)
       return true;
     else
       return false;
@@ -2672,7 +2662,7 @@ bool Blockchain::getGeneratedTransactionsNumber(uint32_t height, uint64_t& gener
 
 bool Blockchain::getOrphanBlockIdsByHeight(uint32_t height, std::vector<Crypto::Hash>& blockHashes) {
   std::lock_guard<decltype(m_blockchain_lock)> lk(m_blockchain_lock);
-  return m_orphanBlocksIndex.find(height, blockHashes);
+  return m_orthanBlocksIndex.find(height, blockHashes);
 }
 
 bool Blockchain::getBlockIdsByTimestamp(uint64_t timestampBegin, uint64_t timestampEnd, uint32_t blocksNumberLimit, std::vector<Crypto::Hash>& hashes, uint32_t& blocksNumberWithinTimestamps) {

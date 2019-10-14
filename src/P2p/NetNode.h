@@ -1,7 +1,8 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero project
-// Copyright (c) 2014-2018, The Forknote developers
-// Copyright (c) 2016-2018, The Karbowanec developers
+// 
+//
+// Copyright (c) 2016-2019, The Karbo developers 
+// Copyright (c) 2018-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -169,9 +170,7 @@ namespace CryptoNote
     bool init_config();
     bool make_default_config();
     bool store_config();
-#ifdef ALLOW_DEBUG_COMMANDS
     bool check_trust(const proof_of_trust& tr);
-#endif
     void initUpnp();
 
     bool handshake(CryptoNote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);

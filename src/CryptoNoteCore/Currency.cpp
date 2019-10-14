@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018  zawy12
-// Copyright (c) 2016-2018, The Karbowanec developers
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2018-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -169,16 +170,11 @@ namespace CryptoNote {
 			}
 		else {
 		// Tail emission
+
 		uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 		if (alreadyGeneratedCoins + CryptoNote::parameters::TAIL_EMISSION_REWARD >= m_moneySupply || baseReward < CryptoNote::parameters::TAIL_EMISSION_REWARD)
 		{
-			// flat rate tail emission reward
-			//baseReward = CryptoNote::parameters::TAIL_EMISSION_REWARD;
-
-			// inflation 2% of total coins in circulation
-			const uint64_t blocksInOneYear = CryptoNote::parameters::EXPECTED_NUMBER_OF_BLOCKS_PER_DAY * 365;
-			uint64_t twoPercentOfEmission = static_cast<double>(alreadyGeneratedCoins) / 100 * 2;
-			baseReward = twoPercentOfEmission / blocksInOneYear;
+			baseReward = CryptoNote::parameters::TAIL_EMISSION_REWARD;
 		}
 
 		size_t blockGrantedFullRewardZone = blockGrantedFullRewardZoneByBlockVersion(blockMajorVersion);
@@ -197,7 +193,7 @@ namespace CryptoNote {
 		emissionChange = penalizedBaseReward - (fee - penalizedFee);
 		reward = penalizedBaseReward + penalizedFee;
 			
-		}		
+		}
 
 		return true;
 	}
@@ -286,7 +282,7 @@ namespace CryptoNote {
 
 		tx.version = CURRENT_TRANSACTION_VERSION;
 		//lock
-		tx.unlockTime = height + (height < CryptoNote::parameters::UPGRADE_HEIGHT_V5 ? m_minedMoneyUnlockWindow : m_minedMoneyUnlockWindow_v1);
+		tx.unlockTime = height + m_minedMoneyUnlockWindow;
 		tx.inputs.push_back(in);
 		return true;
 	}
@@ -586,8 +582,8 @@ namespace CryptoNote {
 		uint64_t nextDiffZ = low / timeSpan;
 
 		// minimum limit
-		if (!isTestnet() && nextDiffZ < 100000) {
-			nextDiffZ = 100000;
+		if (!isTestnet() && nextDiffZ < 100) {
+			nextDiffZ = 100;
 		}
 
 		return nextDiffZ;
@@ -600,7 +596,7 @@ namespace CryptoNote {
 		// Copyright (c) 2017-2018 Zawy
 		// MIT license http://www.opensource.org/licenses/mit-license.php.
 		// This is an improved version of Tom Harding's (Deger8) "WT-144"  
-		// Karbowanec, Masari, Bitcoin Gold, and Bitcoin Cash have contributed.
+		// Geem, Masari, Bitcoin Gold, and Bitcoin Cash have contributed.
 		// See https://github.com/zawy12/difficulty-algorithms/issues/1 for other algos.
 		// Do not use "if solvetime < 0 then solvetime = 1" which allows a catastrophic exploit.
 		// T= target_solvetime;
@@ -625,7 +621,7 @@ namespace CryptoNote {
 		// To get an average solvetime to within +/- ~0.1%, use an adjustment factor.
 		const double adjust = 0.998;
 		// The divisor k normalizes LWMA.
-		const double k = N * (N + 1) / 2.0f;
+		const double k = N * (N + 1) / 2;
 
 		double LWMA(0), sum_inverse_D(0), harmonic_mean_D(0), nextDifficulty(0);
 		int64_t solveTime(0);
@@ -649,8 +645,8 @@ namespace CryptoNote {
 		next_difficulty = static_cast<uint64_t>(nextDifficulty);
 		
 		// minimum limit
-		if (!isTestnet() && next_difficulty < 100000) {
-			next_difficulty = 100000;
+		if (!isTestnet() && next_difficulty < 100) {
+			next_difficulty = 100;
 		}
 
 		return next_difficulty;
@@ -712,8 +708,8 @@ namespace CryptoNote {
 		}
 
 		// minimum limit
-		if (!isTestnet() && next_D < 100000) {
-			next_D = 100000;
+		if (!isTestnet() && next_D < 100) {
+			next_D = 100;
 		}
 
 		return next_D;
@@ -818,7 +814,6 @@ namespace CryptoNote {
 		maxTxSize(parameters::CRYPTONOTE_MAX_TX_SIZE);
 		publicAddressBase58Prefix(parameters::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
 		minedMoneyUnlockWindow(parameters::CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW);
-		minedMoneyUnlockWindow_v1(parameters::CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW_V1);
 		transactionSpendableAge(parameters::CRYPTONOTE_TX_SPENDABLE_AGE);
 		expectedNumberOfBlocksPerDay(parameters::EXPECTED_NUMBER_OF_BLOCKS_PER_DAY);
 

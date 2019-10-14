@@ -1,8 +1,8 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero project
-// Copyright (c) 2014-2018, The Forknote developers
-// Copyright (c) 2016-2018, The Karbowanec developers
-//
+// 
+// 
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2016-2019, The Geem developers
 // This file is part of Karbo.
 //
 // Karbo is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ private:
   CryptoNote::RpcServer* m_prpc_server;
   
   std::string get_commands_str();
-  std::string get_mining_speed(uint64_t hr);
+  std::string get_mining_speed(uint32_t hr);
   float get_sync_percentage(uint64_t height, uint64_t target_height);
   bool print_block_by_height(uint32_t height);
   bool print_block_by_hash(const std::string& arg);

@@ -23,7 +23,6 @@
 #include <HTTP/HttpResponse.h>
 #include <System/TcpConnection.h>
 #include <System/TcpStream.h>
-#include "JsonRpc.h"
 
 #include "Serialization/SerializationTools.h"
 

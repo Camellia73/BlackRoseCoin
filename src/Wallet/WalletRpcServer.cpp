@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014-2016, XDN developers
 // Copyright (c) 2014-2016, The Monero Project
-// Copyright (c) 2016-2018, Karbo developers
+// Copyright (c) 2016-2018, Geem developers
 //
 // This file is part of Karbo.
 //
@@ -624,7 +624,8 @@ bool wallet_rpc_server::on_verify_message(const wallet_rpc::COMMAND_RPC_VERIFY_M
 		throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_WRONG_SIGNATURE, std::string("Signature header check error"));
 	}
 	std::string decoded;
-	if (!Tools::Base58::decode(req.signature.substr(header_len), decoded) || sizeof(Crypto::Signature) != decoded.size()) {
+	Crypto::Signature s;
+	if (!Tools::Base58::decode(req.signature.substr(header_len), decoded) || sizeof(s) != decoded.size()) {
 		throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_CODE_WRONG_SIGNATURE, std::string("Signature decoding error"));
 		return false;
 	}

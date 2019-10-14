@@ -34,14 +34,10 @@ void AccountBase::setNull() {
 }
 //-----------------------------------------------------------------
 void AccountBase::generate() {
-
   Crypto::generate_keys(m_keys.address.spendPublicKey, m_keys.spendSecretKey);
   Crypto::generate_keys(m_keys.address.viewPublicKey, m_keys.viewSecretKey);
-
   m_creation_timestamp = time(NULL);
-
 }
-
 //-----------------------------------------------------------------
 void AccountBase::generateDeterministic() { 
   Crypto::SecretKey second;

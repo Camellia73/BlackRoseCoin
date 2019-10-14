@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The Karbo developers
+// Copyright (c) 2018, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -19,23 +19,26 @@
 #pragma once
 
 #include "BlockchainExplorerData.h"
+#include "BlockchainExplorerData2.h"
 
 #include "Serialization/ISerializer.h"
 
 namespace CryptoNote {
 
-void serialize(transactionOutputDetails2& output, ISerializer& serializer);
+void serialize(transaction_output_details& output, ISerializer& serializer);
 void serialize(TransactionOutputReferenceDetails& outputReference, ISerializer& serializer);
 
 void serialize(BaseInputDetails& inputBase, ISerializer& serializer);
 void serialize(KeyInputDetails& inputToKey, ISerializer& serializer);
 void serialize(MultisignatureInputDetails& inputMultisig, ISerializer& serializer);
-void serialize(transactionInputDetails2& input, ISerializer& serializer);
+void serialize(transaction_input_details& input, ISerializer& serializer);
 
 void serialize(TransactionExtraDetails& extra, ISerializer& serializer);
 void serialize(TransactionExtraDetails2& extra, ISerializer& serializer);
-void serialize(TransactionDetails& transaction, ISerializer& serializer);
+//void serialize(TransactionDetails& transaction, ISerializer& serializer);
+void serialize(TransactionDetails2& transaction, ISerializer& serializer);
 
-void serialize(BlockDetails& block, ISerializer& serializer);
+//void serialize(BlockDetails& block, ISerializer& serializer);
+void serialize(BlockDetails2& block, ISerializer& serializer);
 
 } //namespace CryptoNote

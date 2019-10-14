@@ -1,9 +1,10 @@
-// Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers, The Karbovanets developers
+// Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers, The Geem developers
 // Copyright (c) 2014-2016, XDN developers
 // Copyright (c) 2014-2016, The Monero Project
 // Copyright (c) 2014-2017, The Forknote developers
 // Copyright (c) 2014-2017, The Monero Project
-// Copyright (c) 2016-2018, The Karbo developers
+// Copyright (c) 2016-2019, The Karbo Project
+// Copyright (c) 2018-2019, The Geem developers
 //
 // All rights reserved.
 // 
@@ -82,12 +83,23 @@
 #include "WalletLegacy/WalletHelper.h"
 
 #include "version.h"
-#include "Mnemonics/electrum-words.h"
+#include "mnemonics/electrum-words.h"
 
 #include <Logging/LoggerManager.h>
 
 #if defined(WIN32)
 #include <Windows.h>
+#include <crtdbg.h>
+#include <winsock2.h>
+#include <windns.h>
+#include <Rpc.h>
+# else 
+#include <arpa/nameser.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <resolv.h>
+#include <netdb.h>
 #endif
 
 #include "ITransfersContainer.h"
@@ -113,7 +125,7 @@ const command_line::arg_descriptor<std::string> arg_change_password = { "change-
 const command_line::arg_descriptor<std::string> arg_mnemonic_seed = { "mnemonic-seed", "Specify mnemonic seed for wallet recovery/creation", "" };
 const command_line::arg_descriptor<bool> arg_restore_deterministic_wallet = { "restore-deterministic-wallet", "Recover wallet using electrum-style mnemonic", false };
 const command_line::arg_descriptor<bool> arg_non_deterministic = { "non-deterministic", "Creates non-deterministic (classic) view and spend keys", false };
-const command_line::arg_descriptor<uint16_t> arg_daemon_port = { "daemon-port", "Use daemon instance at port <arg> instead of 32348", 0 };
+const command_line::arg_descriptor<uint16_t> arg_daemon_port = { "daemon-port", "Use daemon instance at port <arg> instead of 2046", 0 };
 const command_line::arg_descriptor<std::string> arg_log_file = {"log-file", "Set the log file location", ""};
 const command_line::arg_descriptor<uint32_t> arg_log_level = { "log-level", "Set the log verbosity level", INFO, true };
 const command_line::arg_descriptor<bool> arg_testnet = { "testnet", "Used to deploy test nets. The daemon must be launched with --testnet flag", false };
@@ -309,8 +321,8 @@ struct TransferCommand {
           if (!remote_fee_address.empty()) {
             destination.address = remote_fee_address;
             int64_t remote_node_fee = static_cast<int64_t>(de.amount * 0.0025);
-            if (remote_node_fee > (int64_t)10000000000000)
-                remote_node_fee = (int64_t)10000000000000;
+            if (remote_node_fee > 10000000000000)
+                remote_node_fee = 10000000000000;
             destination.amount = remote_node_fee;
             dsts.push_back(destination);
           }
@@ -542,8 +554,8 @@ bool processServerAliasResponse(const std::string& s, std::string& address) {
 	try {
 
 		// Courtesy of Monero Project
-		// make sure the txt record has "oa1:krb" and find it
-		auto pos = s.find("oa1:krb");
+		// make sure the txt record has "oa1:geem" and find it
+		auto pos = s.find("oa1:geem");
 		if (pos == std::string::npos)
 			return false;
 		// search from there to find "recipient_address="
@@ -584,13 +596,6 @@ bool askAliasesTransfersConfirmation(const std::map<std::string, std::vector<Wal
 	do {
 		std::cout << "y/n: ";
 		std::getline(std::cin, answer);
-
-		if (std::cin.fail() || std::cin.eof()) {
-			std::cin.clear();
-
-			break;
-		}
-
 	} while (answer != "y" && answer != "Y" && answer != "n" && answer != "N");
 
 	return answer == "y" || answer == "Y";
@@ -849,7 +854,7 @@ bool simple_wallet::get_reserve_proof(const std::vector<std::string> &args)
 		
 		//logger(INFO, BRIGHT_WHITE) << "\n\n" << sig_str << "\n\n" << std::endl;
 
-		const std::string filename = "reserve_proof_" + args[0] + "KRB.txt";
+		const std::string filename = "reserve_proof_" + args[0] + "GEEM.txt";
 		boost::system::error_code ec;
 		if (boost::filesystem::exists(filename, ec)) {
 			boost::filesystem::remove(filename, ec);
@@ -861,7 +866,7 @@ bool simple_wallet::get_reserve_proof(const std::vector<std::string> &args)
 		}
 		proofFile << sig_str;
 
-		success_msg_writer() << "signature saved to file: " << filename;
+		success_msg_writer() << "signature file saved to: " << filename;
 
 	} catch (const std::exception &e) {
 		fail_msg_writer() << e.what();
@@ -2442,7 +2447,8 @@ bool simple_wallet::verify_message(const std::vector<std::string> &args) {
     fail_msg_writer() << ("Signature decoding error");
     return false;
   }
-  if (sizeof(Crypto::Signature) != decoded.size()) {
+  Crypto::Signature s;
+  if (sizeof(s) != decoded.size()) {
     fail_msg_writer() << ("Signature decoding error");
     return false;
   }

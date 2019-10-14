@@ -1,7 +1,8 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero project
-// Copyright (c) 2014-2018, The Forknote developers
-// Copyright (c) 2016-2018, The Karbowanec developers
+// 
+// 
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2018-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -563,9 +564,7 @@ namespace CryptoNote
     //only in case if we really sure that we have external visible ip
     m_have_address = true;
     m_ip_address = 0;
-#ifdef ALLOW_DEBUG_COMMANDS
     m_last_stat_request_time = 0;
-#endif
 
     //configure self
     // m_net_server.get_config_object().m_pcommands_handler = this;

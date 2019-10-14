@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014 - 2017 XDN - project developers
 // Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018-2019 The Karbo developers
+// Copyright (c) 2018-2019 The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -25,7 +25,7 @@
 #include <boost/program_options.hpp>
 
 #include "Logging/ILogger.h"
-#include "Common/PasswordContainer.cpp"
+#include "SimpleWallet/PasswordContainer.cpp"
 
 namespace po = boost::program_options;
 

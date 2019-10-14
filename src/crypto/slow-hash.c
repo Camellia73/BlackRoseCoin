@@ -1,8 +1,6 @@
 // Copyright (c) 2012-2013, The Cryptonote developers
 // Copyright (c) 2014-2017, The Monero Project
 // Copyright (c) 2017-2018, Karbo developers
-// Copyright (c) 2018, The CryoNote Developers
-// Copyright (c) 2018-2019, BlackRoseCoin Project
 // 
 // All rights reserved.
 // 
@@ -40,7 +38,7 @@
 #include "oaes_lib.h"
 #include "aesb.h"
 
-#define MEMORY         (1 << 19) /* 0.5 MiB */
+#define MEMORY         (1 << 19) // 0.5MB scratchpad
 #define ITER           (1 << 18)
 #define AES_BLOCK_SIZE  16
 #define AES_KEY_SIZE    32

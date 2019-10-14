@@ -1,8 +1,9 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero project
-// Copyright (c) 2014-2018, The Forknote developers
+// 
+// 
 // Copyright (c) 2018, The TurtleCoin developers
-// Copyright (c) 2016-2018, The Karbowanec developers
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2016-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -81,11 +82,10 @@ std::string DaemonCommandsHandler::get_commands_str()
 }
 
 //--------------------------------------------------------------------------------
-std::string DaemonCommandsHandler::get_mining_speed(uint64_t hr) {
-  if (hr > 1e12) return (boost::format("%.2f TH/s") % (hr / 1e12)).str();
-  if (hr > 1e9) return (boost::format("%.2f GH/s") % (hr / 1e9)).str();
-  if (hr > 1e6) return (boost::format("%.2f MH/s") % (hr / 1e6)).str();
-  if (hr > 1e3) return (boost::format("%.2f kH/s") % (hr / 1e3)).str();
+std::string DaemonCommandsHandler::get_mining_speed(uint32_t hr) {
+  if (hr>1e9) return (boost::format("%.2f GH/s") % (hr / 1e9)).str();
+  if (hr>1e6) return (boost::format("%.2f MH/s") % (hr / 1e6)).str();
+  if (hr>1e3) return (boost::format("%.2f kH/s") % (hr / 1e3)).str();
   return (boost::format("%.0f H/s") % hr).str();
 }
 
@@ -119,14 +119,13 @@ bool DaemonCommandsHandler::status(const std::vector<std::string>& args) {
   size_t tx_pool_size = m_core.get_pool_transactions_count();
   size_t alt_blocks_count = m_core.get_alternative_blocks_count();
   uint32_t last_known_block_index = std::max(static_cast<uint32_t>(1), protocolQuery.getObservedHeight()) - 1;
-  Crypto::Hash last_block_hash = m_core.getBlockIdByHeight(height);
   size_t total_conn = m_srv.get_connections_count();
   size_t rpc_conn = m_prpc_server->get_connections_count();
   size_t outgoing_connections_count = m_srv.get_outgoing_connections_count();
   size_t incoming_connections_count = total_conn - outgoing_connections_count;
   size_t white_peerlist_size = m_srv.getPeerlistManager().get_white_peers_count();
   size_t grey_peerlist_size = m_srv.getPeerlistManager().get_gray_peers_count();
-  uint64_t hashrate = (uint64_t) round(difficulty / CryptoNote::parameters::DIFFICULTY_TARGET);
+  uint64_t hashrate = (uint32_t)round(difficulty / CryptoNote::parameters::DIFFICULTY_TARGET);
   std::time_t uptime = std::time(nullptr) - m_core.getStartTime();
   uint8_t majorVersion = m_core.getBlockMajorVersionForHeight(height);
   bool synced = ((uint32_t)height == (uint32_t)last_known_block_index);
@@ -136,12 +135,10 @@ bool DaemonCommandsHandler::status(const std::vector<std::string>& args) {
     << (synced ? "Synced " : "Syncing ") << height << "/" << last_known_block_index 
     << " (" << get_sync_percentage(height, last_known_block_index) << "%) "
     << "on " << (m_core.currency().isTestnet() ? "testnet, " : "mainnet, ")
-    << "last block hash: " << Common::podToHex(last_block_hash)
-    << ", network hashrate: " << get_mining_speed(hashrate) << ", next difficulty: " << difficulty << ", "
+    << "network hashrate: " << get_mining_speed(hashrate) << ", next difficulty: " << difficulty << ", "
     << "block v. " << (int)majorVersion << ", alt. blocks: " << alt_block_count << ", "
     << outgoing_connections_count << " out. + " << incoming_connections_count << " inc. connection(s), "
-    << rpc_conn <<  " rpc connection(s), " << "peers: " << white_peerlist_size << " white / " << grey_peerlist_size << " grey, "
-    << tx_pool_size << " transaction(s) in mempool, "
+    << rpc_conn <<  " rpc connection(s), " << tx_pool_size << " transaction(s) in mempool, "
     << "uptime: " << (unsigned int)floor(uptime / 60.0 / 60.0 / 24.0) << "d " << (unsigned int)floor(fmod((uptime / 60.0 / 60.0), 24.0)) << "h "
     << (unsigned int)floor(fmod((uptime / 60.0), 60.0)) << "m " << (unsigned int)fmod(uptime, 60.0) << "s"
     << std::endl;
@@ -241,7 +238,7 @@ bool DaemonCommandsHandler::print_bci(const std::vector<std::string>& args)
 bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 {
   if (args.size() != 1) {
-    std::cout << "use: set_log <log_level_number_0-4>" << ENDL;
+    std::cout << "use: set_log <log_level_number_0-5>" << ENDL;
     return true;
   }
 
@@ -420,7 +417,6 @@ bool DaemonCommandsHandler::ban(const std::vector<std::string>& args)
     try {
       seconds = std::stoi(args[1]);
     } catch (const std::exception &e) {
-      std::cout << "Incorrect time value: " << e.what() << std::endl;
       return false;
     }
     if (seconds == 0) {
@@ -430,7 +426,6 @@ bool DaemonCommandsHandler::ban(const std::vector<std::string>& args)
   try {
     ip = Common::stringToIpAddress(addr);
   } catch (const std::exception &e) {
-     std::cout << "Incorrect IP value: " << e.what() << std::endl;
      return false;
   }
   return m_srv.ban_host(ip, seconds);
@@ -443,8 +438,7 @@ bool DaemonCommandsHandler::unban(const std::vector<std::string>& args)
   uint32_t ip;
   try {
     ip = Common::stringToIpAddress(addr);
-  } catch (const std::exception &e) {
-    std::cout << "Incorrect IP value: " << e.what() << std::endl;
+  }	catch (const std::exception &e) {
     return false;
   }
   return m_srv.unban_host(ip);
