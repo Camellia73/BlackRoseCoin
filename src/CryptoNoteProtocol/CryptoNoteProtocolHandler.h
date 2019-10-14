@@ -34,8 +34,6 @@
 
 #include <Logging/LoggerRef.h>
 
-#define CURRENCY_PROTOCOL_MAX_OBJECT_REQUEST_COUNT 500
-
 namespace System {
   class Dispatcher;
 }

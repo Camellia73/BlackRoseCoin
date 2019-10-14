@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014-2017, The Monero Project
-// Copyright (c) 2016-2018, The Karbo developers
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2018-2019, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -90,7 +91,7 @@ namespace Crypto {
     ge_scalarmult_base(&point, reinterpret_cast<unsigned char*>(&sec));
     ge_p3_tobytes(reinterpret_cast<unsigned char*>(&pub), &point);
   }
- 
+
   SecretKey crypto_ops::generate_m_keys(PublicKey &pub, SecretKey &sec, const SecretKey& recovery_key, bool recover) {
     lock_guard<mutex> lock(random_lock);
     ge_p3 point;

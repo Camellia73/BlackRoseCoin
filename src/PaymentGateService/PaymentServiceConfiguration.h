@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014 - 2017 XDN - project developers
 // Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2016-2019 The Karbo developers
+// Copyright (c) 2016-2019 The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -26,7 +26,7 @@
 
 #include <boost/program_options.hpp>
 
-#include "Common/PasswordContainer.h"
+#include "SimpleWallet/PasswordContainer.h"
 
 namespace {
 	Tools::PasswordContainer pwd_container;

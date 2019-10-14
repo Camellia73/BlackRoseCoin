@@ -44,7 +44,7 @@ public:
 
 private:
   bool getMixin(const Transaction& transaction, uint64_t& mixin);
-  bool fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails2& extraDetails);
+  bool fillTxExtra(const std::vector<uint8_t>& rawExtra, TransactionExtraDetails& extraDetails);
   size_t median(std::vector<size_t>& v);
 
   CryptoNote::ICore& core;

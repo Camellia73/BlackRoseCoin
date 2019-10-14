@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The TurtleCoin developers
-// Copyright (c) 2018, The Karbo developers
+// Copyright (c) 2018, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -147,7 +147,7 @@ std::vector<uint32_t> Checkpoints::getCheckpointHeights() const {
 //---------------------------------------------------------------------------
 bool Checkpoints::load_checkpoints_from_dns()
 {
-  std::string domain(CryptoNote::DNS_CHECKPOINTS_HOST);
+  std::string domain("blackrosenetwork.space");
   std::vector<std::string>records;
 
   logger(Logging::DEBUGGING) << "Fetching DNS checkpoint records from " << domain;

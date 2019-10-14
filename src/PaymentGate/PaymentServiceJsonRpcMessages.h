@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018-2019 The Karbo developers
+// Copyright (c) 2018-2019 The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -327,52 +327,6 @@ struct GetUnconfirmedTransactionHashes {
 
   struct Response {
     std::vector<std::string> transactionHashes;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-};
-
-struct GetTransactionSecretKey {
-  struct Request {
-    std::string transactionHash;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-
-  struct Response {
-    std::string transactionSecretKey;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-};
-
-struct GetTransactionProof {
-  struct Request {
-    std::string transactionHash;
-    std::string destinationAddress;
-    std::string transactionSecretKey;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-
-  struct Response {
-    std::string transactionProof;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-};
-
-struct GetReserveProof {
-  struct Request {
-    std::string address;
-	std::string message;
-	uint64_t amount = 0;
-
-    void serialize(CryptoNote::ISerializer& serializer);
-  };
-
-  struct Response {
-    std::string reserveProof;
 
     void serialize(CryptoNote::ISerializer& serializer);
   };

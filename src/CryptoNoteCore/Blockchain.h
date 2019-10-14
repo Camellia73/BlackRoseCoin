@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2016, The Karbowanec developers
+// Copyright (c) 2016, The Geem developers
 //
 // This file is part of Karbo.
 //
@@ -23,14 +23,6 @@
 #include "google/sparse_hash_set"
 #include "google/sparse_hash_map"
 
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/composite_key.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index/mem_fun.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/random_access_index.hpp>
-
 #include "Common/ObserverManager.h"
 #include "Common/Util.h"
 #include "CryptoNoteCore/BlockIndex.h"
@@ -53,7 +45,6 @@
 #undef ERROR
 
 namespace CryptoNote {
-
   struct NOTIFY_REQUEST_GET_OBJECTS_request;
   struct NOTIFY_RESPONSE_GET_OBJECTS_request;
   struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request;
@@ -91,7 +82,7 @@ namespace CryptoNote {
     bool getBlockHeight(const Crypto::Hash& blockId, uint32_t& blockHeight);
 
     template<class archive_t> void serialize(archive_t & ar, const unsigned int version);
-    
+
     bool haveTransaction(const Crypto::Hash &id);
     bool haveTransactionKeyImagesAsSpent(const Transaction &tx);
 
@@ -99,11 +90,11 @@ namespace CryptoNote {
     Crypto::Hash getTailId();
     Crypto::Hash getTailId(uint32_t& height);
     difficulty_type getDifficultyForNextBlock();
-    uint64_t getBlockTimestamp(uint32_t height);
-    uint64_t getMinimalFee(uint32_t height);
+	uint64_t getBlockTimestamp(uint32_t height);
+	uint64_t getMinimalFee(uint32_t height);
     uint64_t getCoinsInCirculation();
     uint8_t getBlockMajorVersionForHeight(uint32_t height) const;
-    uint8_t blockMajorVersion;
+	uint8_t blockMajorVersion;
     bool addNewBlock(const Block& bl_, block_verification_context& bvc);
     bool resetAndSetGenesisBlock(const Block& b);
     bool haveBlock(const Crypto::Hash& id);
@@ -132,7 +123,7 @@ namespace CryptoNote {
     bool getTransactionIdsByPaymentId(const Crypto::Hash& paymentId, std::vector<Crypto::Hash>& transactionHashes);
     bool isBlockInMainChain(const Crypto::Hash& blockId);
     bool isInCheckpointZone(const uint32_t height);
-    uint64_t getAvgDifficultyForHeight(uint32_t height, uint32_t window);
+    uint64_t getAvgDifficultyForHeight(uint32_t height, size_t window);
 
     template<class visitor_t> bool scanOutputKeysForIndexes(const KeyInput& tx_in_to_key, visitor_t& vis, uint32_t* pmax_related_block_height = NULL);
 
@@ -154,7 +145,6 @@ namespace CryptoNote {
             blocks.push_back(m_blocks[height].bl);
           }
         } catch (const std::exception& e) {
-          logger(Logging::ERROR, Logging::BRIGHT_RED) << "Exception in Core getBlocks: " << e.what();
           return false;
         }
       }
@@ -206,24 +196,8 @@ namespace CryptoNote {
       }
     };
 
-    struct SpentKeyImage {
-      uint32_t blockIndex;
-      Crypto::KeyImage keyImage;
-
-      void serialize(ISerializer& s) {
-        s(blockIndex, "block_index");
-        s(keyImage, "key_image");
-      }
-    };
-
     void rollbackBlockchainTo(uint32_t height);
-    bool have_tx_keyimg_as_spent(const Crypto::KeyImage &key_im);
-
-    bool checkIfSpent(const Crypto::KeyImage& keyImage, uint32_t blockIndex);
-    bool checkIfSpent(const Crypto::KeyImage& keyImage);
-
-    //bool checkIfSpentMultisignature(uint64_t amount, uint32_t globalIndex) const override;
-    //bool checkIfSpentMultisignature(uint64_t amount, uint32_t globalIndex, uint32_t blockIndex) const override;
+	bool have_tx_keyimg_as_spent(const Crypto::KeyImage &key_im);
 
   private:
 
@@ -267,28 +241,8 @@ namespace CryptoNote {
       }
     };
 
-    struct BlockIndexTag {};
-    struct BlockHashTag {};
-    struct TransactionHashTag {};
-    struct KeyImageTag {};
-    struct TimestampTag {};
-    struct PaymentIdTag {};
-
-    typedef boost::multi_index_container<
-      SpentKeyImage,
-      boost::multi_index::indexed_by<
-      boost::multi_index::ordered_non_unique<
-      boost::multi_index::tag<BlockIndexTag>,
-      BOOST_MULTI_INDEX_MEMBER(SpentKeyImage, uint32_t, blockIndex)
-      >,
-      boost::multi_index::hashed_unique<
-      boost::multi_index::tag<KeyImageTag>,
-      BOOST_MULTI_INDEX_MEMBER(SpentKeyImage, Crypto::KeyImage, keyImage)
-      >
-      >
-    > SpentKeyImagesContainer;
-    typedef std::unordered_map<Crypto::Hash, BlockEntry> blocks_ext_by_hash;
     typedef google::sparse_hash_set<Crypto::KeyImage> key_images_container;
+    typedef std::unordered_map<Crypto::Hash, BlockEntry> blocks_ext_by_hash;
     typedef google::sparse_hash_map<uint64_t, std::vector<std::pair<TransactionIndex, uint16_t>>> outputs_container; //Crypto::Hash - tx hash, size_t - index of out in transaction
     typedef google::sparse_hash_map<uint64_t, std::vector<MultisignatureOutputUsage>> MultisignatureOutputsContainer;
 
@@ -299,7 +253,6 @@ namespace CryptoNote {
     Tools::ObserverManager<IBlockchainStorageObserver> m_observerManager;
 
     key_images_container m_spent_keys;
-    SpentKeyImagesContainer spentKeyImages;
     size_t m_current_block_cumul_sz_limit;
     blocks_ext_by_hash m_alternative_chains; // Crypto::Hash -> block_extended_info
     outputs_container m_outputs;
@@ -322,13 +275,13 @@ namespace CryptoNote {
     MultisignatureOutputsContainer m_multisignatureOutputs;
     UpgradeDetector m_upgradeDetectorV2;
     UpgradeDetector m_upgradeDetectorV3;
-    UpgradeDetector m_upgradeDetectorV4;
-    UpgradeDetector m_upgradeDetectorV5;
+	UpgradeDetector m_upgradeDetectorV4;
+	UpgradeDetector m_upgradeDetectorV5;
 
     PaymentIdIndex m_paymentIdIndex;
     TimestampBlocksIndex m_timestampIndex;
     GeneratedTransactionsIndex m_generatedTransactionsIndex;
-    OrphanBlocksIndex m_orphanBlocksIndex;
+    OrphanBlocksIndex m_orthanBlocksIndex;
     bool m_blockchainIndexesEnabled;
 
     IntrusiveLinkedList<MessageQueue<BlockchainMessage>> m_messageQueueList;

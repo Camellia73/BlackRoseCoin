@@ -185,17 +185,17 @@ private:
 };
 
 
-void invokeJsonRpcCommand(HttpClient& httpClient, JsonRpcRequest& req, JsonRpcResponse& res, const std::string& user = "", const std::string& password = "");
+void invokeJsonRpcCommand(HttpClient& httpClient, JsonRpcRequest& req, JsonRpcResponse& res);
 
 template <typename Request, typename Response>
-void invokeJsonRpcCommand(HttpClient& httpClient, const std::string& method, const Request& req, Response& res, const std::string& user = "", const std::string& password = "") {
+void invokeJsonRpcCommand(HttpClient& httpClient, const std::string& method, const Request& req, Response& res) {
   JsonRpcRequest jsReq;
   JsonRpcResponse jsRes;
 
   jsReq.setMethod(method);
   jsReq.setParams(req);
 
-  invokeJsonRpcCommand(httpClient, jsReq, jsRes, user, password);
+  invokeJsonRpcCommand(httpClient, jsReq, jsRes);
 
   jsRes.getResult(res);
 }
