@@ -522,7 +522,7 @@ bool Blockchain::init(const std::string& config_folder, bool load_existing) {
 
   uint64_t timestamp_diff = time(NULL) - m_blocks.back().bl.timestamp;
   if (!m_blocks.back().bl.timestamp) {
-    timestamp_diff = time(NULL) - 1567486800;
+    timestamp_diff = time(NULL) - 1567303200;
   }
 
   logger(INFO, BRIGHT_GREEN)

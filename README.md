@@ -2,15 +2,13 @@
 
 Copyright (c) 2018-2019, BlackRoseCoin Project
 
+Copyright (c) 2018-2019, The Geem developers
+
 Copyright (c) 2016-2019 The Karbowanec developers
 
 Copyright (c) 2018-2019, The Arqma Network
 
 Copyright (c) 2018, The CryoNote Developers
-
-Copyright (c) 2018-2019 The Koson Project
-
-Copyright (c) 2014-2016 XDN developers
 
 Copyright (c) 2014-2018, The Monero Project
 
@@ -21,16 +19,10 @@ Copyright (c) 2011-2016 The Cryptonote developers
 - Mail: [blackrosecoin@tutanota.com](blackrosecoin@tutanota.com)
 - Repo: [https://github.com/Camellia73/BlackRoseCoin.git](https://github.com/Camellia73/BlackRoseCoin.git)
 
-## Introduction
-
-BlackRoseCoin is a fork from Monero, one of the most respectable cryptocurrency well-known for **security, privacy, untraceability** and **active development**. BlackRoseCoin was created with high level of privacy by (1) moving forward right away to **Ring Confidential Transactions (RingCT)**, (2) setting **minimum transaction _mixin_ to 14** that would greatly reduce chance of being attacked, traced or identified by (blockchain) statistical analysis.
-
-BlackRoseCoin, therefore, is a new Monero without its legacy, a _truely fungible_ cryptocurrency among just a few ones in the market.
-
 ## Coin Supply & Emission
 
 - **Total supply**: **100,000,000** coins.
-- **Premine**: **4%** (**2%** for developers and **2%** for future **development and marketing**, i.e. **96 million coins available** for the mining community).
+- **Premine**: **50%** for SWAP(13 000 000 old BR1 + 37 000 000 KSN).
 - **Coin symbol**: **BR1**
 - **Coin Units**:
   + 1 Nano-BlackRoseCoin &nbsp;= 0.000000001 **BR1** (10<sup>-9</sup> - _the smallest coin unit_)
@@ -52,7 +44,7 @@ As with many development projects, the repository on Github is considered to be 
 
 Please view [LICENSE](LICENSE)
 
-[![License](https://img.shields.io/badge/license-BSD3-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![License](https://img.shields.io/github/license/Camellia73/BlackRoseCoin)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## Compiling BlackRoseCoin from Source
 
@@ -97,7 +89,7 @@ invokes cmake commands as needed.
     
 * Change to the root of the source code directory and build:
 
-        cd blackrosecoin
+        cd BlackRoseCoin
         make
 
     *Optional*: If your machine has several cores and enough memory, enable
@@ -105,29 +97,11 @@ invokes cmake commands as needed.
     this to be worthwhile, the machine should have one core and about 2GB of RAM
     available per thread.
 
-* The resulting executables can be found in `build/release/bin`
-
-* Add `PATH="$PATH:$HOME/blackrosecoin/build/release/bin"` to `.profile`
-
-* Run BlackRoseCoin with `blackrosecoind --detach`
-
-* **Optional**: build and run the test suite to verify the binaries:
-
-        make release-test
-
-    *NOTE*: `coretests` test may take a few hours to complete.
+* The resulting executables can be found in `build/release/src`
 
 * **Optional**: to build binaries suitable for debugging:
 
          make debug
-
-* **Optional**: to build statically-linked binaries:
-
-         make release-static
-
-* **Optional**: build documentation in `doc/html` (omit `HAVE_DOT=YES` if `graphviz` is not installed):
-
-        HAVE_DOT=YES doxygen Doxyfile
 
 #### On the Raspberry Pi
 
@@ -162,15 +136,11 @@ Tested on a Raspberry Pi 2 with a clean install of minimal Debian Jessie from ht
 * Change to the root of the source code directory and build:
 
         cd blackrosecoin
-        make release
+        make
 
 * Wait ~4 hours
 
-* The resulting executables can be found in `build/release/bin`
-
-* Add `PATH="$PATH:$HOME/blackrosecoin/build/release/bin"` to `.profile`
-
-* Run BlackRoseCoin with `blackrosecoind --detach`
+* The resulting executables can be found in `build/release/src`
 
 * You may wish to reduce the size of the swap file after the build has finished, and delete the boost directory from your home directory
 
@@ -184,46 +154,17 @@ application.
 
 **Preparing the Build Environment**
 
-* Download and install the [MSYS2 installer](http://msys2.github.io), either the 64-bit or the 32-bit package, depending on your system.
-* Open the MSYS shell via the `MSYS2 Shell` shortcut
-* Update packages using pacman:  
-
-        pacman -Syuu  
-
-* Exit the MSYS shell using Alt+F4  
-* Edit the properties for the `MSYS2 Shell` shortcut changing "msys2_shell.bat" to "msys2_shell.cmd -mingw64" for 64-bit builds or "msys2_shell.cmd -mingw32" for 32-bit builds
-* Restart MSYS shell via modified shortcut and update packages again using pacman:  
-
-        pacman -Syuu  
-
-
-* Install dependencies:
-
-    To build for 64-bit Windows:
-
-        pacman -S mingw-w64-x86_64-toolchain make mingw-w64-x86_64-cmake mingw-w64-x86_64-boost mingw-w64-x86_64-openssl
-
-    To build for 32-bit Windows:
- 
-        pacman -S mingw-w64-i686-toolchain make mingw-w64-i686-cmake mingw-w64-i686-boost mingw-w64-i686-openssl
-
-* Open the MingW shell via `MinGW-w64-Win64 Shell` shortcut on 64-bit Windows
-  or `MinGW-w64-Win64 Shell` shortcut on 32-bit Windows. Note that if you are
-  running 64-bit Windows, you will have both 64-bit and 32-bit MinGW shells.
-
-**Building**
-
-* Make sure path to MSYS2 installed directory in `Makefile` is correct.
-
-* If you are on a 64-bit system, run:
-
-        make release-static
-
-* If you are on a 32-bit system, run:
-
-        make release-static
-
-* The resulting executables can be found in `build/mingw64/release/bin` or `build/mingw32/release/bin` accordingly.
+* Download and install Visual Studio 2015 or Visual Studio 2017.
+* Use the Visual Studio installation wizard to install all the necessary tools.
+* Download and install Cmake GUI
+* Download and install [Boost libraries] (https://sourceforge.net/projects/boost/files/boost-binaries/1.69.0/) for your version of Visual Studio.
+* Open Cmake and select the source folder
+* Click the "configure" button. Select your version of Visual Studio and "x64" in the box below. After that, click "Finish".
+* Wait for the process to finish and click "Generate".
+* Click on "Open project".
+* Change the configuration from "Debug" to "Release".
+* Open the "Build" menu and select "Build solution".
+* Wait for the process to finish and open the resulting exe in build/src/Release
 
 ### On FreeBSD:
 
@@ -233,82 +174,6 @@ application.
 
 * Clone source code, change to the root of the source code directory and build:
 
-        git clone https://github.com/Camellia73/blackrosecoin; cd blackrosecoin; make release-static;
-
-
-### On OpenBSD:
-
-This has been tested on OpenBSD 5.8.
-
-You will need to add a few packages to your system. `pkg_add db cmake gcc gcc-libs g++ miniupnpc gtest`.
-
-The doxygen and graphviz packages are optional and require the xbase set.
-
-The Boost package has a bug that will prevent librpc.a from building correctly. In order to fix this, you will have to Build boost yourself from scratch. Follow the directions here (under "Building Boost"):
-https://github.com/bitcoin/bitcoin/blob/master/doc/build-openbsd.md
-
-You will have to add the serialization, date_time, and regex modules to Boost when building as they are needed by BlackRoseCoin.
-
-To build: `env CC=egcc CXX=eg++ CPP=ecpp DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/path/to/the/boost/you/built make release-static-64`
-
-## Running blackrosecoind
-
-The build places the binary in `bin/` sub-directory within the build directory
-from which cmake was invoked (repository root by default). To run in
-foreground:
-
-    ./bin/blackrosecoind
-
-To list all available options, run `./bin/blackrosecoind --help`.  Options can be
-specified either on the command line or in a configuration file passed by the
-`--config-file` argument.  To specify an option in the configuration file, add
-a line with the syntax `argumentname=value`, where `argumentname` is the name
-of the argument without the leading dashes, for example `log-level=1`.
-
-To run in background:
-
-    ./bin/blackrosecoind --log-file blackrosecoind.log --detach
-
-To run as a systemd service, copy
-[blackrosecoind.service](utils/systemd/blackrosecoind.service) to `/etc/systemd/system/` and
-[blackrosecoind.conf](utils/conf/blackrosecoind.conf) to `/etc/`. The [example
-service](utils/systemd/blackrosecoind.service) assumes that the user `blackrosecoin` exists
-and its home is the data directory specified in the [example
-config](utils/conf/blackrosecoind.conf).
-
-If you're on Mac, you may need to add the `--max-concurrency 1` option to
-blackrosecoin-wallet-cli, and possibly blackrosecoind, if you get crashes refreshing.
-
-## Internationalization
-
-Please see [README.i18n](README.i18n)
-
-## Using Tor
-
-While BlackRoseCoin isn't made to integrate with Tor, it can be used wrapped with torsocks, if you add --p2p-bind-ip 127.0.0.1 to the blackrosecoind command line. You also want to set DNS requests to go over TCP, so they'll be routed through Tor, by setting DNS_PUBLIC=tcp. You may also disable IGD (UPnP port forwarding negotiation), which is pointless with Tor. To allow local connections from the wallet, you might have to add TORSOCKS_ALLOW_INBOUND=1, some OSes need it and some don't. Example:
-
-`DNS_PUBLIC=tcp torsocks blackrosecoind --p2p-bind-ip 127.0.0.1 --no-igd`
-
-or:
-
-`DNS_PUBLIC=tcp TORSOCKS_ALLOW_INBOUND=1 torsocks blackrosecoind --p2p-bind-ip 127.0.0.1 --no-igd`
-
-TAILS ships with a very restrictive set of firewall rules. Therefore, you need to add a rule to allow this connection too, in addition to telling torsocks to allow inbound connections. Full example:
-
-`sudo iptables -I OUTPUT 2 -p tcp -d 127.0.0.1 -m tcp --dport 18081 -j ACCEPT`
-
-`DNS_PUBLIC=tcp torsocks ./blackrosecoind --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 127.0.0.1 --data-dir /home/your/directory/to/the/blockchain`
-
-`./blackrosecoin-wallet-cli`
-
-## Using readline
-
-While `blackrosecoind` and `blackrosecoin-wallet-cli` do not use readline directly, most of the functionality can be obtained by running them via `rlwrap`. This allows command recall, edit capabilities, etc. It does not give autocompletion without an extra completion file, however. To use rlwrap, simply prepend `rlwrap` to the command line, eg:
-
-`rlwrap bin/blackrosecoin-wallet-cli --wallet-file /path/to/wallet`
-
-Note: rlwrap will save things like your seed and private keys, if you supply them on prompt. You may want to not use rlwrap when you use simplewallet to restore from seed, etc.
-
-# Debugging
-
-This section contains general instructions for debugging failed installs or problems encountered with BlackRoseCoin. First ensure you are running the latest version built from the github repo.
+        git clone https://github.com/Camellia73/BlackRoseCoin.git; cd BlackRoseCoin; make;
+		
+		
